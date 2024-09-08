@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>todolist</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="todolist.css">
+  </head>
+  <body>
+    <br><div class="main">
+      <h1>&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp;ToDoList</h1><br>
+    <input type="text" placeholder="Enter the task" autofocus />
+    <button>Add</button>
+    <p></p>
+
+    <ul></ul>
+  </div>
+  </body>
+
+  <script>
+    let input = document.querySelector("input");
+    let button = document.querySelector("button");
+    let ul = document.querySelector("ul");
+
+    let tasks = [];
+    let count = 1;
+    let isEditing = false;
+
+    button.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (!isEditing) {
+        let obj = {};
+        obj.id = count++;
+        obj.task = input.value;
+        tasks.push(obj);
+      } else {
+        tasks.forEach((t) => {
+          if ((t.id == isEditing)) {
+            t.task = input.value;
+          }
+        });
+        isEditing = false;
+      }
+
+      input.focus();
+
+      cleanSlate();
+      displaytasks();
+    });
+
+    function displaytasks() {
+      tasks.forEach((t) => {
+        const li = document.createElement("li"); //<li></li>
+        const del = document.createElement("i"); //<i></i>
+        const edit = document.createElement("i"); //<i></i>
+
+        del.classList.add("fa-solid", "fa-trash"); //<i class="fa-solid fa-trash"></i>
+        edit.classList.add("fa-solid", "fa-pencil"); //<i class="fa-solid fa-pencil"></i>
+
+        del.addEventListener("click", () => deleting(t.id));
+        edit.addEventListener("click", () => editing(t.id));
+
+        li.innerHTML = t.task; //<li>Shubh</li>
+
+        li.append(del, edit);
+        //<li>Shubh <i class="fa-solid fa-trash"></i> <i class="fa-solid fa-pencil"></i></li>
+
+        ul.append(li);
+      });
+      // input.value = ""
+    }
+
+    function cleanSlate() {
+      ul.innerHTML = "";
+      input.value = "";
+      input.focus();
+    }
+
+    function deleting(idtoDelete) {
+      tasks.forEach((t, index) => {
+        console.log(t.id);
+
+        if (t.id == idtoDelete) {
+          tasks.splice(index, 1);
+        }
+      });
+      cleanSlate();
+      displaytasks();
+    }
+
+    function editing(idtoEdit) {
+      tasks.forEach((t) => {
+        //console.log(t.id);
+        if (t.id === idtoEdit) {
+          input.value = t.task;
+          isEditing = t.id;
+        }
+      })
+      input.focus()
+    }
+  </script>
+</html>
